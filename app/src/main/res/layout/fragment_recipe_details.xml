@@ -4,7 +4,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.sfotakos.foodsteps.recipesteps.RecipeDetailsFragment">
+        tools:context="com.sfotakos.foodsteps.recipedetails.RecipeDetailsFragment">
 
         <include
             android:id="@+id/included"

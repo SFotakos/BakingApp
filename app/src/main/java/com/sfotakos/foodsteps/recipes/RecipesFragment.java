@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Recipe;
 import com.sfotakos.foodsteps.databinding.FragmentRecipesBinding;
-import com.sfotakos.foodsteps.recipesteps.RecipeDetailsActivity;
+import com.sfotakos.foodsteps.recipedetails.RecipeDetailsActivity;
 
 public class RecipesFragment extends Fragment implements RecipesAdapter.IRecipesAdapter {
 

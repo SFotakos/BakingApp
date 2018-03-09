@@ -1,5 +1,6 @@
-package com.sfotakos.foodsteps.recipesteps;
+package com.sfotakos.foodsteps.recipedetails;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +13,11 @@ import android.view.ViewGroup;
 import com.sfotakos.foodsteps.DividerItemDecoration;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeDetailsBinding;
-import com.sfotakos.foodsteps.recipes.RecipesAdapter;
+import com.sfotakos.foodsteps.recipestep.RecipeStepActivity;
 
-public class RecipeDetailsFragment extends Fragment {
+public class RecipeDetailsFragment extends Fragment implements StepsAdapter.IStepsAdapter {
     private static final String RECIPE_PARAM = "RECIPE_PARAM";
 
     private FragmentRecipeDetailsBinding mBinding;
@@ -64,9 +66,19 @@ public class RecipeDetailsFragment extends Fragment {
             RecyclerView rvRecipeSteps = mBinding.included.rvRecipeSteps;
             rvRecipeSteps.setLayoutManager(stepsLayoutManager);
             rvRecipeSteps.addItemDecoration(new DividerItemDecoration(getContext()));
-            rvRecipeSteps.setAdapter(new StepsAdapter(recipeExtra.getSteps()));
+            rvRecipeSteps.setAdapter(new StepsAdapter(recipeExtra.getSteps(), this));
         }
 
         return fragmentView;
+    }
+
+    @Override
+    public void onClick(Step step, int currentStep, int stepCount) {
+        Intent recipeStepsListIntent = new Intent(getActivity(), RecipeStepActivity.class);
+        recipeStepsListIntent.putExtra(RecipeStepActivity.RECIPE_NAME_EXTRA, recipeExtra.getName());
+        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_EXTRA, step);
+        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_CURRENT, currentStep);
+        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_COUNT, stepCount);
+        getActivity().startActivity(recipeStepsListIntent);
     }
 }

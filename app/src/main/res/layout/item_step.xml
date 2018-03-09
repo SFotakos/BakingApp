@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
-        android:id="@+id/linear_ingredients"
+        android:id="@+id/linear_itemStep"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/material_baseline_grid_0.5x"

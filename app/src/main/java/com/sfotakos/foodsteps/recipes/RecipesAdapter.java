@@ -101,10 +101,6 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
             tvRecipeSteps = itemView.findViewById(R.id.tv_stepsAmount);
             tvRecipeServingAmount = itemView.findViewById(R.id.tv_recipeServingAmount);
         }
-
-        public void onClick(Recipe recipe){
-            mListener.onClick(recipe);
-        }
     }
 
     public interface IRecipesAdapter{

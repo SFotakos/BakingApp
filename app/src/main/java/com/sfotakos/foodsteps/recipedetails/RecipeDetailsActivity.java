@@ -1,4 +1,4 @@
-package com.sfotakos.foodsteps.recipesteps;
+package com.sfotakos.foodsteps.recipedetails;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.ActionBar;
