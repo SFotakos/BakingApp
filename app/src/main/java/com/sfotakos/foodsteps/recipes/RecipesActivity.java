@@ -31,16 +31,18 @@ public class RecipesActivity extends AppCompatActivity {
         ActivityUtils.applyFontForToolbarTitle(toolbar,
                 ResourcesCompat.getFont(this, R.font.comic_black_rabbit));
 
-        RecipesFragment tasksFragment =
+        setupFragment();
+    }
+
+    private void setupFragment(){
+        RecipesFragment recipesFragment =
                 (RecipesFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
-        if (tasksFragment == null) {
+        if (recipesFragment == null) {
             // Create the fragment
-            tasksFragment = RecipesFragment.newInstance();
+            recipesFragment = RecipesFragment.newInstance();
 
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contentFrame, tasksFragment).commit();
+                    .add(R.id.contentFrame, recipesFragment).commit();
         }
-
-
     }
 }

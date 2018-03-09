@@ -2,6 +2,7 @@ package com.sfotakos.foodsteps.recipes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,14 +21,16 @@ import java.util.List;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
     private List<Recipe> recipeList = new ArrayList<>();
+    private IRecipesAdapter mListener;
 
     public void setRecipesList(List<Recipe> reviewList) {
         this.recipeList = reviewList;
         notifyDataSetChanged();
     }
 
-    public RecipesAdapter(Context context) {
+    public RecipesAdapter(Context context, IRecipesAdapter listener) {
         recipeList = JsonUtil.getRecipes(context.getAssets());
+        mListener = listener;
     }
 
     @NonNull
@@ -42,8 +45,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     @Override
     public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
-        Recipe recipe = recipeList.get(position);
+        final Recipe recipe = recipeList.get(position);
         Context context = holder.tvRecipeName.getContext();
+
+        holder.cvRecipe.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onClick(recipe);
+            }
+        });
 
         holder.tvRecipeName.setText(recipe.getName());
 
@@ -73,6 +83,8 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     class RecipeViewHolder extends RecyclerView.ViewHolder {
 
+        final CardView cvRecipe;
+
         final TextView tvRecipeName;
         final ImageView ivRecipeImage;
 
@@ -83,10 +95,21 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         RecipeViewHolder(View itemView) {
             super(itemView);
 
+            cvRecipe = itemView.findViewById(R.id.cv_recipe);
             tvRecipeName = itemView.findViewById(R.id.tv_recipeName);
             ivRecipeImage = itemView.findViewById(R.id.iv_recipeImage);
             tvRecipeSteps = itemView.findViewById(R.id.tv_stepsAmount);
             tvRecipeServingAmount = itemView.findViewById(R.id.tv_recipeServingAmount);
         }
+
+        public void onClick(Recipe recipe){
+            mListener.onClick(recipe);
+        }
     }
+
+    public interface IRecipesAdapter{
+        void onClick(Recipe recipe);
+    }
+
+
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/linear_ingredients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/material_baseline_grid_0.5x"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_ingredientName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/material_typography_regular_subheading_text_size"
+            android:gravity="center_vertical"
+            tools:text="Sugar"/>
+
+        <TextView
+            android:id="@+id/tv_ingredientAmount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textSize="@dimen/material_typography_regular_body_1_text_size"
+            tools:text="1 TBSP" />
+
+    </LinearLayout>
+</layout>
