@@ -1,9 +1,5 @@
 package com.sfotakos.foodsteps;
 
-/**
- * Created by spyridion on 05/03/18.
- */
-
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -77,5 +73,4 @@ public class Recipe {
     public void setImage(String image) {
         this.image = image;
     }
-
 }

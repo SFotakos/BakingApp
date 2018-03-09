@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Food Steps</string>
+    <string name="app_name">FoodSteps</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="food_steps_amount">in %1$s</string>
+    <string name="food_servings_amount">%1$s servings</string>
 </resources>

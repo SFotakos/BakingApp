@@ -1,24 +1,21 @@
 package com.sfotakos.foodsteps.recipes;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.sfotakos.foodsteps.JsonUtil;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Recipe;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-/**
- * Created by spyridion on 05/03/18.
- */
 
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
@@ -33,8 +30,9 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         recipeList = JsonUtil.getRecipes(context.getAssets());
     }
 
+    @NonNull
     @Override
-    public RecipeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -43,11 +41,29 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     }
 
     @Override
-    public void onBindViewHolder(RecipeViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
         Recipe recipe = recipeList.get(position);
+        Context context = holder.tvRecipeName.getContext();
 
-        holder.recipeName.setText(recipe.getName());
+        holder.tvRecipeName.setText(recipe.getName());
 
+        if (recipe.getImage() != null && !recipe.getImage().isEmpty()){
+            Picasso.with(context)
+                    .load(recipe.getImage())
+                    .placeholder(R.drawable.ic_food)
+                    .error(R.drawable.ic_food)
+                    .into(holder.ivRecipeImage);
+        }
+
+        String inStepsAmount = String.format(
+                context.getResources().getString(R.string.food_steps_amount),
+                Integer.toString(recipe.getSteps().size()));
+        holder.tvRecipeSteps.setText(inStepsAmount);
+
+        String servingsAmount = String.format(
+                context.getResources().getString(R.string.food_servings_amount),
+                Integer.toString(recipe.getServings()));
+        holder.tvRecipeServingAmount.setText(servingsAmount);
     }
 
     @Override
@@ -57,13 +73,20 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
     class RecipeViewHolder extends RecyclerView.ViewHolder {
 
-        TextView recipeName;
+        final TextView tvRecipeName;
+        final ImageView ivRecipeImage;
+
+        final TextView tvRecipeSteps;
+
+        final TextView tvRecipeServingAmount;
 
         RecipeViewHolder(View itemView) {
             super(itemView);
 
-            recipeName = itemView.findViewById(R.id.tv_recipeName);
-
+            tvRecipeName = itemView.findViewById(R.id.tv_recipeName);
+            ivRecipeImage = itemView.findViewById(R.id.iv_recipeImage);
+            tvRecipeSteps = itemView.findViewById(R.id.tv_stepsAmount);
+            tvRecipeServingAmount = itemView.findViewById(R.id.tv_recipeServingAmount);
         }
     }
 }

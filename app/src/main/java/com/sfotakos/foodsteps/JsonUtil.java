@@ -13,14 +13,10 @@ import java.util.List;
 
 import static android.content.ContentValues.TAG;
 
-/**
- * Created by spyridion on 05/03/18.
- */
-
 public class JsonUtil {
 
     public static List<Recipe> getRecipes(AssetManager assetManager) {
-        String jsonString = getAssetsJSON("bakingRecipes.json", assetManager);
+        String jsonString = getAssetsJSON(assetManager);
         Log.d(TAG, "Json: " + jsonString);
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Recipe>>(){}.getType();
@@ -29,10 +25,10 @@ public class JsonUtil {
     }
 
     /* Get File in Assets Folder */
-    public static String getAssetsJSON(String fileName, AssetManager assetManager) {
+    public static String getAssetsJSON(AssetManager assetManager) {
         String json = null;
         try {
-            InputStream inputStream = assetManager.open(fileName);
+            InputStream inputStream = assetManager.open("bakingRecipes.json");
             int size = inputStream.available();
             byte[] buffer = new byte[size];
             inputStream.read(buffer);
