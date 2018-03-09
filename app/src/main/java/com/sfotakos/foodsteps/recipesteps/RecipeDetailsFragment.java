@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.sfotakos.foodsteps.DividerItemDecoration;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Recipe;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeDetailsBinding;
@@ -50,13 +51,20 @@ public class RecipeDetailsFragment extends Fragment {
         mBinding = DataBindingUtil.bind(fragmentView);
 
         if (recipeExtra != null){
-            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
+            LinearLayoutManager ingredientsLayoutManager = new LinearLayoutManager(getContext(),
                     LinearLayoutManager.VERTICAL, false);
 
-            RecyclerView recyclerView = mBinding.included.rvRecipeIngredients;
+            RecyclerView rvRecipeIngredients = mBinding.included.rvRecipeIngredients;
+            rvRecipeIngredients.setLayoutManager(ingredientsLayoutManager);
+            rvRecipeIngredients.setAdapter(new IngredientsAdapter(recipeExtra.getIngredients()));
 
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(new IngredientsAdapter(recipeExtra.getIngredients()));
+            LinearLayoutManager stepsLayoutManager = new LinearLayoutManager(getContext(),
+                    LinearLayoutManager.VERTICAL, false);
+
+            RecyclerView rvRecipeSteps = mBinding.included.rvRecipeSteps;
+            rvRecipeSteps.setLayoutManager(stepsLayoutManager);
+            rvRecipeSteps.addItemDecoration(new DividerItemDecoration(getContext()));
+            rvRecipeSteps.setAdapter(new StepsAdapter(recipeExtra.getSteps()));
         }
 
         return fragmentView;

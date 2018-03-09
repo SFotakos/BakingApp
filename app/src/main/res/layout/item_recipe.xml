@@ -7,18 +7,19 @@
         android:id="@+id/cv_recipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        app:cardCornerRadius="8dp">
+        android:layout_margin="@dimen/material_baseline_grid_2x"
+        app:cardCornerRadius="@dimen/material_card_corner_radius">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp">
+            android:padding="@dimen/material_baseline_grid_1x">
 
             <LinearLayout
                 android:id="@+id/linear_recipeNameImage"
-                android:layout_width="100dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:minWidth="100dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -27,8 +28,8 @@
 
                 <ImageView
                     android:id="@+id/iv_recipeImage"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="@dimen/material_icon_size_product"
+                    android:layout_height="@dimen/material_icon_size_product"
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"
                     app:srcCompat="@drawable/ic_food" />
@@ -38,7 +39,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/material_typography_tall_subheading_text_size"
                     android:textStyle="bold"
                     tools:text="Cookie" />
 
@@ -48,8 +49,8 @@
                 android:id="@+id/tv_stepsAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:textSize="18sp"
+                android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
+                android:textSize="@dimen/material_typography_regular_subheading_text_size"
                 android:textStyle="italic"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_stepsBranding"
                 app:layout_constraintStart_toEndOf="@+id/linear_recipeNameImage"
@@ -60,10 +61,10 @@
                 android:id="@+id/tv_stepsBranding"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
                 android:fontFamily="@font/comic_black_rabbit"
                 android:text="@string/app_name"
-                android:textSize="24sp"
+                android:textSize="@dimen/material_typography_tall_title_text_size"
                 app:layout_constraintStart_toEndOf="@+id/tv_stepsAmount"
                 app:layout_constraintTop_toTopOf="@+id/linear_recipeNameImage" />
 
@@ -71,10 +72,10 @@
                 android:id="@+id/tv_recipeServingAmount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginStart="4dp"
+                android:layout_marginEnd="@dimen/material_baseline_grid_0.5x"
+                android:layout_marginStart="@dimen/material_baseline_grid_0.5x"
                 android:gravity="end"
-                android:textSize="18sp"
+                android:textSize="@dimen/material_typography_regular_subheading_text_size"
                 app:layout_constraintBottom_toBottomOf="@+id/linear_recipeNameImage"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linear_recipeNameImage"
