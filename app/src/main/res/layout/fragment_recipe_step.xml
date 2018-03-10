@@ -11,8 +11,8 @@
         android:showDividers="middle"
         tools:context="com.sfotakos.foodsteps.recipestep.RecipeStepFragment">
 
-        <TextView
-            android:id="@+id/tv_stepVideo"
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/exoPlayerView_stepVideo"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"

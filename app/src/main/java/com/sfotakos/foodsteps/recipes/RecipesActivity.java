@@ -23,10 +23,6 @@ public class RecipesActivity extends AppCompatActivity {
 
         Toolbar toolbar = mBinding.toolbar;
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setHomeAsUpIndicator(R.mipmap.ic_launcher);
-        actionBar.setDisplayHomeAsUpEnabled(true);
 
         ActivityUtils.applyFontForToolbarTitle(toolbar,
                 ResourcesCompat.getFont(this, R.font.comic_black_rabbit));

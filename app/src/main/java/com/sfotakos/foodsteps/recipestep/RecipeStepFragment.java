@@ -3,13 +3,28 @@ package com.sfotakos.foodsteps.recipestep;
 import android.databinding.DataBindingUtil;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.sfotakos.foodsteps.ActivityUtils;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Step;
@@ -25,6 +40,8 @@ public class RecipeStepFragment extends Fragment {
 
     private ArrayList<Step> stepsExtra;
     private int currentStep;
+
+    private SimpleExoPlayer exoPlayer;
 
     public RecipeStepFragment() {
         // Required empty public constructor
@@ -83,9 +100,9 @@ public class RecipeStepFragment extends Fragment {
     private void loadStep(Step step){
         String videoURL = step.getVideoURL();
         if (videoURL == null || videoURL.isEmpty()) {
-            mBinding.tvStepVideo.setVisibility(View.GONE);
+            mBinding.exoPlayerViewStepVideo.setVisibility(View.GONE);
         } else {
-            mBinding.tvStepVideo.setVisibility(View.VISIBLE);
+            mBinding.exoPlayerViewStepVideo.setVisibility(View.VISIBLE);
         }
 
         mBinding.tvStepFullDescription.setText(step.getDescription());
@@ -93,47 +110,60 @@ public class RecipeStepFragment extends Fragment {
         String stepCountString = Integer.toString(currentStep) + "/" +
                 Integer.toString(stepsExtra.size()-1);
         mBinding.tvCurrentStep.setText(stepCountString);
+
+        setupExoPlayer(Uri.parse(step.getVideoURL()));
     }
 
     private void nextStep(){
         currentStep++;
+        stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
         prevNextEnable();
     }
 
     private void previousStep(){
         currentStep--;
+        stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
         prevNextEnable();
     }
 
     private void prevNextEnable(){
         if (currentStep == 0){
-            ActivityUtils.setViewAndChildrenEnabled(mBinding.linearPrevStep, false);
-            mBinding.ivPrevStep.setColorFilter(
-                    ContextCompat.getColor(
-                            getContext(), R.color.material_color_grey_300),
-                    android.graphics.PorterDuff.Mode.SRC_IN);
+            mBinding.linearPrevStep.setVisibility(View.INVISIBLE);
         } else if (currentStep == stepsExtra.size()-1){
-            ActivityUtils.setViewAndChildrenEnabled(mBinding.linearNextStep, false);
-            mBinding.ivNextStep.setColorFilter(
-                    ContextCompat.getColor(
-                            getContext(), R.color.material_color_grey_300),
-                    android.graphics.PorterDuff.Mode.SRC_IN);
+            mBinding.linearNextStep.setVisibility(View.INVISIBLE);
         } else {
-            ActivityUtils.setViewAndChildrenEnabled(mBinding.linearPrevStep, true);
-            mBinding.ivPrevStep.setColorFilter(
-                    ContextCompat.getColor(
-                            getContext(), R.color.material_color_grey_600),
-                    android.graphics.PorterDuff.Mode.SRC_IN);
-
-            ActivityUtils.setViewAndChildrenEnabled(mBinding.linearNextStep, true);
-            mBinding.ivNextStep.setColorFilter(
-                    ContextCompat.getColor(
-                            getContext(), R.color.material_color_grey_600),
-                    android.graphics.PorterDuff.Mode.SRC_IN);
-
+            mBinding.linearPrevStep.setVisibility(View.VISIBLE);
+            mBinding.linearNextStep.setVisibility(View.VISIBLE);
         }
     }
 
+    private void setupExoPlayer(Uri videoUri){
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+        TrackSelection.Factory videoTrackSelectionFactory =
+                new AdaptiveTrackSelection.Factory(bandwidthMeter);
+        TrackSelector trackSelector =
+                new DefaultTrackSelector(videoTrackSelectionFactory);
+
+        exoPlayer =
+                ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
+
+        mBinding.exoPlayerViewStepVideo.setPlayer(exoPlayer);
+
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(getContext(),
+                Util.getUserAgent(getContext(), "com.sfotakos.foodsteps"), null);
+
+        MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(videoUri);
+
+        exoPlayer.prepare(videoSource);
+    }
+
+    private void stopReleaseExoPlayer(){
+        if (exoPlayer != null){
+            exoPlayer.stop();
+            exoPlayer.release();
+        }
+    }
 }
