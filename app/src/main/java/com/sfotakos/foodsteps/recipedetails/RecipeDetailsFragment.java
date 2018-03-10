@@ -17,6 +17,9 @@ import com.sfotakos.foodsteps.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeDetailsBinding;
 import com.sfotakos.foodsteps.recipestep.RecipeStepActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipeDetailsFragment extends Fragment implements StepsAdapter.IStepsAdapter {
     private static final String RECIPE_PARAM = "RECIPE_PARAM";
 
@@ -73,12 +76,11 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.ISte
     }
 
     @Override
-    public void onClick(Step step, int currentStep, int stepCount) {
+    public void onClick(ArrayList<Step> steps, int currentStep) {
         Intent recipeStepsListIntent = new Intent(getActivity(), RecipeStepActivity.class);
         recipeStepsListIntent.putExtra(RecipeStepActivity.RECIPE_NAME_EXTRA, recipeExtra.getName());
-        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_EXTRA, step);
+        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_EXTRA, steps);
         recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_CURRENT, currentStep);
-        recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_COUNT, stepCount);
         getActivity().startActivity(recipeStepsListIntent);
     }
 }

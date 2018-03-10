@@ -10,11 +10,12 @@ import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Step;
 import com.sfotakos.foodsteps.databinding.ActivityRecipeStepsBinding;
 
+import java.util.ArrayList;
+
 public class RecipeStepActivity extends AppCompatActivity {
 
     public static final String STEP_EXTRA = "STEP_EXTRA_DATA";
     public static final String STEP_CURRENT = "STEP_CURRENT_EXTRA_DATA";
-    public static final String STEP_COUNT = "STEP_COUNT_EXTRA_DATA";
     public static final String RECIPE_NAME_EXTRA = "RECIPE_NAME_EXTRA_DATA";
 
     private ActivityRecipeStepsBinding mBinding;
@@ -34,23 +35,22 @@ public class RecipeStepActivity extends AppCompatActivity {
         if (getIntent().getExtras() != null) {
             String recipeName = getIntent().getExtras().getString(RECIPE_NAME_EXTRA);
             Integer currentStep = getIntent().getExtras().getInt(STEP_CURRENT);
-            Integer stepCount = getIntent().getExtras().getInt(STEP_COUNT);
-            Step step = getIntent().getExtras().getParcelable(STEP_EXTRA);
-            if (step == null || recipeName == null) //TODO treat this error better
+            ArrayList<Step> steps = (ArrayList<Step>) getIntent().getExtras().getSerializable(STEP_EXTRA);
+            if (steps == null || recipeName == null) //TODO treat this error better
                 return;
 
             actionBar.setTitle(recipeName);
 
-            setupFragment(step, currentStep, stepCount);
+            setupFragment(steps, currentStep);
         }
     }
 
-    private void setupFragment(Step step, int currentStep, int stepCount) {
+    private void setupFragment(ArrayList<Step> steps, int currentStep) {
         RecipeStepFragment recipeStepFragment =
                 (RecipeStepFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (recipeStepFragment == null) {
             // Create the fragment
-            recipeStepFragment = RecipeStepFragment.newInstance(step, currentStep, stepCount);
+            recipeStepFragment = RecipeStepFragment.newInstance(steps, currentStep);
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contentFrame, recipeStepFragment).commit();

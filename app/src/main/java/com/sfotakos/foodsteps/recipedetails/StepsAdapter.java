@@ -15,14 +15,13 @@ import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Step;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
-    private List<Step> stepList = new ArrayList<>();
+    private ArrayList<Step> stepList = new ArrayList<>();
     private IStepsAdapter mListener;
 
-    public StepsAdapter(List<Step> stepList, IStepsAdapter listener) {
+    public StepsAdapter(ArrayList<Step> stepList, IStepsAdapter listener) {
         this.stepList = stepList;
         this.mListener = listener;
     }
@@ -45,12 +44,18 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         holder.linearStep.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onClick(step, position, stepList.size());
+                mListener.onClick(stepList, position);
             }
         });
 
-        String stepCount = Integer.toString(position + 1) + ". ";
-        holder.tvStepCount.setText(stepCount);
+        if (position != 0) {
+            String stepCount = position + ". ";
+            holder.tvStepCount.setText(stepCount);
+            holder.tvStepCount.setVisibility(View.VISIBLE);
+        } else {
+            holder.tvStepCount.setVisibility(View.INVISIBLE);
+        }
+
         holder.tvStepDescription.setText(step.getShortDescription());
 
         if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
@@ -84,7 +89,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
     }
 
     public interface IStepsAdapter{
-        void onClick(Step step, int currentStep, int stepCount);
+        void onClick(ArrayList<Step> steps, int currentStep);
     }
 
 }
