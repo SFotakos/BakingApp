@@ -25,7 +25,7 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
 
         String jsonRecipe = RecipeWidgetPreferenceUtil.getPersistedRecipe(context, appWidgetId);
-        Recipe recipe = JsonUtil.getRecipe(jsonRecipe);
+        Recipe recipe = JsonUtil.parseRecipeFromJson(jsonRecipe);
         if (recipe != null) {
             views.setTextViewText(R.id.tv_recipeName, recipe.getName());
 

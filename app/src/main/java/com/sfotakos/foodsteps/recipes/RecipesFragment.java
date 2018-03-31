@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -16,14 +17,32 @@ import com.sfotakos.foodsteps.general.Recipe;
 import com.sfotakos.foodsteps.databinding.FragmentRecipesBinding;
 import com.sfotakos.foodsteps.recipedetails.RecipeDetailsActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipesFragment extends Fragment implements RecipesAdapter.IRecipesAdapter {
+
+    private static final String RECIPES_PARAM = "RECIPES_PARAM";
+    private ArrayList<Recipe> recipeList;
 
     public RecipesFragment() {
         // Required empty public constructor
     }
 
-    public static RecipesFragment newInstance() {
-        return new RecipesFragment();
+    public static RecipesFragment newInstance(ArrayList<Recipe> recipes) {
+        RecipesFragment fragment = new RecipesFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(RECIPES_PARAM, recipes);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            recipeList = (ArrayList<Recipe>) getArguments().getSerializable(RECIPES_PARAM);
+        }
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -38,7 +57,7 @@ public class RecipesFragment extends Fragment implements RecipesAdapter.IRecipes
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false);
         mBinding.rvRecipes.setLayoutManager(layoutManager);
-        mBinding.rvRecipes.setAdapter(new RecipesAdapter(getContext(), this));
+        mBinding.rvRecipes.setAdapter(new RecipesAdapter(this, recipeList));
 
         return fragmentView;
     }

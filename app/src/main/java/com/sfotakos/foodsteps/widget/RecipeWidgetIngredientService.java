@@ -17,7 +17,7 @@ public class RecipeWidgetIngredientService extends RemoteViewsService {
     @Override
     public RemoteViewsService.RemoteViewsFactory onGetViewFactory(Intent intent) {
         String jsonString = intent.getStringExtra(RECIPE);
-        Recipe recipe = JsonUtil.getRecipe(jsonString);
+        Recipe recipe = JsonUtil.parseRecipeFromJson(jsonString);
 
         return (new RecipeWidgetIngredientsProvider(this.getApplicationContext(), recipe));
     }
