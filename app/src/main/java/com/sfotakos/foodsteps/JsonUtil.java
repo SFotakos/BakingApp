@@ -24,6 +24,13 @@ public class JsonUtil {
         return recipes;
     }
 
+    public static Recipe getRecipe(String json) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<Recipe>(){}.getType();
+        Recipe recipe = gson.fromJson(json, listType);
+        return recipe;
+    }
+
     /* Get File in Assets Folder */
     public static String getAssetsJSON(AssetManager assetManager) {
         String json = null;
@@ -40,5 +47,11 @@ public class JsonUtil {
         }
 
         return json;
+    }
+
+    /* Get File in Assets Folder */
+    public static String generateJson(Object pojo) {
+        Gson gson = new Gson();
+        return gson.toJson(pojo);
     }
 }

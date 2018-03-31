@@ -29,6 +29,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
     }
 
     public RecipesAdapter(Context context, IRecipesAdapter listener) {
+        //TODO CHANGE TO A NETWORK REQUEST
         recipeList = JsonUtil.getRecipes(context.getAssets());
         mListener = listener;
     }

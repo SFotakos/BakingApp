@@ -5,9 +5,9 @@
     <string name="food_servings_amount">%1$s servings</string>
     <string name="ingredients">Ingredients:</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="accessibility_item_step_video">This step has a video</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_configuration_title">Select recipe</string>
 </resources>
