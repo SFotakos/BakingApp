@@ -1,15 +1,12 @@
 package com.sfotakos.foodsteps.widget;
 
-import android.app.LauncherActivity;
-import android.appwidget.AppWidgetManager;
 import android.content.Context;
-import android.content.Intent;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import com.sfotakos.foodsteps.Ingredient;
+import com.sfotakos.foodsteps.general.Ingredient;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.general.Recipe;
 
 import java.util.ArrayList;
 

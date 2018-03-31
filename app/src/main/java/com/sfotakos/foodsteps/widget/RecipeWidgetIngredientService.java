@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.widget.RemoteViewsService;
 
 import com.sfotakos.foodsteps.JsonUtil;
-import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.general.Recipe;
 
 /**
  * Assign the adapter that populates the listView
@@ -12,7 +12,7 @@ import com.sfotakos.foodsteps.Recipe;
 
 public class RecipeWidgetIngredientService extends RemoteViewsService {
 
-    static String RECIPE = "RECIPE_EXTRA";
+    static final String RECIPE = "RECIPE_EXTRA";
 
     @Override
     public RemoteViewsService.RemoteViewsFactory onGetViewFactory(Intent intent) {

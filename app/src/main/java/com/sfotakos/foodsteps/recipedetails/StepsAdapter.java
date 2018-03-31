@@ -12,14 +12,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Step;
+import com.sfotakos.foodsteps.general.Step;
 
 import java.util.ArrayList;
 
 public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHolder> {
 
     private ArrayList<Step> stepList = new ArrayList<>();
-    private IStepsAdapter mListener;
+    private final IStepsAdapter mListener;
 
     public StepsAdapter(ArrayList<Step> stepList, IStepsAdapter listener) {
         this.stepList = stepList;
@@ -38,7 +38,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull StepViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull StepViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         final Step step = stepList.get(position);
 
         holder.linearStep.setOnClickListener(new View.OnClickListener() {

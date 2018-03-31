@@ -1,13 +1,11 @@
 package com.sfotakos.foodsteps.recipestep;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +23,8 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.sfotakos.foodsteps.ActivityUtils;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Step;
+import com.sfotakos.foodsteps.general.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeStepBinding;
 
 import java.util.ArrayList;
@@ -66,7 +63,7 @@ public class RecipeStepFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View fragmentView =
                 inflater.inflate(R.layout.fragment_recipe_step, container, false);
@@ -140,6 +137,9 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void setupExoPlayer(Uri videoUri){
+        Context context = getContext();
+        if (context == null) return;
+
         BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         TrackSelection.Factory videoTrackSelectionFactory =
                 new AdaptiveTrackSelection.Factory(bandwidthMeter);

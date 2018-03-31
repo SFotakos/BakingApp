@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Step;
+import com.sfotakos.foodsteps.general.Step;
 import com.sfotakos.foodsteps.databinding.ActivityRecipeStepsBinding;
 
 import java.util.ArrayList;
@@ -18,13 +18,11 @@ public class RecipeStepActivity extends AppCompatActivity {
     public static final String STEP_CURRENT = "STEP_CURRENT_EXTRA_DATA";
     public static final String RECIPE_NAME_EXTRA = "RECIPE_NAME_EXTRA_DATA";
 
-    private ActivityRecipeStepsBinding mBinding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_steps);
+        ActivityRecipeStepsBinding mBinding = DataBindingUtil.setContentView(this, R.layout.activity_recipe_steps);
 
         Toolbar toolbar = mBinding.toolbar;
         setSupportActionBar(toolbar);

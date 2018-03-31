@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.sfotakos.foodsteps.Ingredient;
+import com.sfotakos.foodsteps.general.Ingredient;
 import com.sfotakos.foodsteps.R;
 
 import java.util.ArrayList;

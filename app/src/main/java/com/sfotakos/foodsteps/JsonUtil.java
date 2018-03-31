@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.sfotakos.foodsteps.general.Recipe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +33,7 @@ public class JsonUtil {
     }
 
     /* Get File in Assets Folder */
-    public static String getAssetsJSON(AssetManager assetManager) {
+    private static String getAssetsJSON(AssetManager assetManager) {
         String json = null;
         try {
             InputStream inputStream = assetManager.open("bakingRecipes.json");

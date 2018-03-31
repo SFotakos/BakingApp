@@ -1,8 +1,10 @@
 package com.sfotakos.foodsteps.recipedetails;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,20 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.sfotakos.foodsteps.DividerItemDecoration;
+import com.sfotakos.foodsteps.general.DividerItemDecoration;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Recipe;
-import com.sfotakos.foodsteps.Step;
+import com.sfotakos.foodsteps.general.Recipe;
+import com.sfotakos.foodsteps.general.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeDetailsBinding;
 import com.sfotakos.foodsteps.recipestep.RecipeStepActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipeDetailsFragment extends Fragment implements StepsAdapter.IStepsAdapter {
     private static final String RECIPE_PARAM = "RECIPE_PARAM";
-
-    private FragmentRecipeDetailsBinding mBinding;
 
     private Recipe recipeExtra;
 
@@ -48,14 +47,15 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.ISte
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View fragmentView =
                 inflater.inflate(R.layout.fragment_recipe_details, container, false);
 
-        mBinding = DataBindingUtil.bind(fragmentView);
+        FragmentRecipeDetailsBinding mBinding = DataBindingUtil.bind(fragmentView);
+        if (mBinding == null) return null;
 
-        if (recipeExtra != null){
+        if (recipeExtra != null) {
             LinearLayoutManager ingredientsLayoutManager = new LinearLayoutManager(getContext(),
                     LinearLayoutManager.VERTICAL, false);
 
@@ -81,6 +81,9 @@ public class RecipeDetailsFragment extends Fragment implements StepsAdapter.ISte
         recipeStepsListIntent.putExtra(RecipeStepActivity.RECIPE_NAME_EXTRA, recipeExtra.getName());
         recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_EXTRA, steps);
         recipeStepsListIntent.putExtra(RecipeStepActivity.STEP_CURRENT, currentStep);
-        getActivity().startActivity(recipeStepsListIntent);
+        Activity activity = getActivity();
+        if (activity != null) {
+            getActivity().startActivity(recipeStepsListIntent);
+        }
     }
 }

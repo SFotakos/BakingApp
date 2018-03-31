@@ -9,8 +9,8 @@ import android.content.SharedPreferences;
 
 class RecipeWidgetPreferenceUtil {
 
-    static String widgetPrefs = "WIDGET_PREFERENCES";
-    static String widgetRecipe = "WIDGET_SAVED_RECIPE";
+    private static final String widgetPrefs = "WIDGET_PREFERENCES";
+    private static final String widgetRecipe = "WIDGET_SAVED_RECIPE";
 
     static void persistRecipe(Context context, String recipeJson, int widgetId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(widgetPrefs, 0);

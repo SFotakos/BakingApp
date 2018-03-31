@@ -1,4 +1,4 @@
-package com.sfotakos.foodsteps;
+package com.sfotakos.foodsteps.general;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -11,15 +11,15 @@ public class Ingredient implements Parcelable {
 
     @SerializedName("quantity")
     @Expose
-    private Double quantity;
+    private final Double quantity;
     @SerializedName("measure")
     @Expose
-    private String measure;
+    private final String measure;
     @SerializedName("ingredient")
     @Expose
-    private String ingredient;
+    private final String ingredient;
 
-    protected Ingredient(Parcel in) {
+    Ingredient(Parcel in) {
         quantity = in.readByte() == 0x00 ? null : in.readDouble();
         measure = in.readString();
         ingredient = in.readString();
@@ -59,23 +59,12 @@ public class Ingredient implements Parcelable {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
     public String getMeasure() {
         return measure;
-    }
-
-    public void setMeasure(String measure) {
-        this.measure = measure;
     }
 
     public String getIngredient() {
         return ingredient;
     }
 
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
-    }
 }

@@ -1,19 +1,20 @@
-package com.sfotakos.foodsteps;
+package com.sfotakos.foodsteps.general;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.sfotakos.foodsteps.R;
+
 public class DividerItemDecoration extends RecyclerView.ItemDecoration {
 
-    private Drawable mDivider;
+    private final Drawable mDivider;
 
     public DividerItemDecoration(Context context) {
-        mDivider = ContextCompat.getDrawable(context,R.drawable.divider);
+        mDivider = ContextCompat.getDrawable(context, R.drawable.divider);
     }
 
     @Override

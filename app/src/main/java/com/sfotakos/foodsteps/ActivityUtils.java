@@ -3,7 +3,6 @@ package com.sfotakos.foodsteps;
 import android.graphics.Typeface;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class ActivityUtils {

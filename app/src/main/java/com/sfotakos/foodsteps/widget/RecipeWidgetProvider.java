@@ -6,23 +6,12 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.provider.SyncStateContract;
-import android.widget.ListView;
 import android.widget.RemoteViews;
 
-import com.google.gson.reflect.TypeToken;
-import com.sfotakos.foodsteps.Ingredient;
 import com.sfotakos.foodsteps.JsonUtil;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.general.Recipe;
 import com.sfotakos.foodsteps.recipedetails.RecipeDetailsActivity;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.sfotakos.foodsteps.widget.RecipeWidgetConfiguration.WIDGET_SELECTED_RECIPE;
 
 /**
  * Implementation of App Widget functionality.

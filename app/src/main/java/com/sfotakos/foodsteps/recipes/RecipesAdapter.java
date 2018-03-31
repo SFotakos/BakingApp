@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.sfotakos.foodsteps.JsonUtil;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.general.Recipe;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -22,12 +22,7 @@ import java.util.List;
 public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeViewHolder> {
 
     private List<Recipe> recipeList = new ArrayList<>();
-    private IRecipesAdapter mListener;
-
-    public void setRecipesList(List<Recipe> reviewList) {
-        this.recipeList = reviewList;
-        notifyDataSetChanged();
-    }
+    private final IRecipesAdapter mListener;
 
     public RecipesAdapter(Context context, IRecipesAdapter listener) {
         //TODO CHANGE TO A NETWORK REQUEST

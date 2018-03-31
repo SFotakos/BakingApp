@@ -1,4 +1,4 @@
-package com.sfotakos.foodsteps;
+package com.sfotakos.foodsteps.general;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,21 +10,21 @@ public class Step implements Parcelable {
 
     @SerializedName("id")
     @Expose
-    private Integer id;
+    private final Integer id;
     @SerializedName("shortDescription")
     @Expose
-    private String shortDescription;
+    private final String shortDescription;
     @SerializedName("description")
     @Expose
-    private String description;
+    private final String description;
     @SerializedName("videoURL")
     @Expose
-    private String videoURL;
+    private final String videoURL;
     @SerializedName("thumbnailURL")
     @Expose
-    private String thumbnailURL;
+    private final String thumbnailURL;
 
-    protected Step(Parcel in) {
+    Step(Parcel in) {
         id = in.readByte() == 0x00 ? null : in.readInt();
         shortDescription = in.readString();
         description = in.readString();
@@ -64,43 +64,16 @@ public class Step implements Parcelable {
         }
     };
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getShortDescription() {
         return shortDescription;
-    }
-
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getVideoURL() {
         return videoURL;
     }
 
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-    }
-
-    public String getThumbnailURL() {
-        return thumbnailURL;
-    }
-
-    public void setThumbnailURL(String thumbnailURL) {
-        this.thumbnailURL = thumbnailURL;
-    }
 }

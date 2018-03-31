@@ -2,24 +2,19 @@ package com.sfotakos.foodsteps.widget;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.sfotakos.foodsteps.ActivityUtils;
 import com.sfotakos.foodsteps.JsonUtil;
 import com.sfotakos.foodsteps.R;
-import com.sfotakos.foodsteps.Recipe;
+import com.sfotakos.foodsteps.general.Recipe;
 import com.sfotakos.foodsteps.recipes.RecipesAdapter;
 
 public class RecipeWidgetConfiguration extends Activity implements RecipesAdapter.IRecipesAdapter {
 
-    public static final String WIDGET_SELECTED_RECIPE = "WIDGET_SELECTED_RECIPE_DATA";
-    int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+    private int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
     public RecipeWidgetConfiguration() {
         super();
@@ -51,7 +46,6 @@ public class RecipeWidgetConfiguration extends Activity implements RecipesAdapte
         // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
-            return;
         }
     }
 
