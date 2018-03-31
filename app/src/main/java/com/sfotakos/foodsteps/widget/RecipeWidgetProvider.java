@@ -5,14 +5,21 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
+import android.widget.ListView;
 import android.widget.RemoteViews;
 
+import com.google.gson.reflect.TypeToken;
+import com.sfotakos.foodsteps.Ingredient;
 import com.sfotakos.foodsteps.JsonUtil;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.Recipe;
 import com.sfotakos.foodsteps.recipedetails.RecipeDetailsActivity;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.sfotakos.foodsteps.widget.RecipeWidgetConfiguration.WIDGET_SELECTED_RECIPE;
@@ -27,17 +34,25 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
 
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.recipe_widget);
-        Recipe recipe = JsonUtil.getRecipe(RecipeWidgetPreferenceUtil.getPersistedRecipe(context, appWidgetId));
 
+        String jsonRecipe = RecipeWidgetPreferenceUtil.getPersistedRecipe(context, appWidgetId);
+        Recipe recipe = JsonUtil.getRecipe(jsonRecipe);
         if (recipe != null) {
+            views.setTextViewText(R.id.tv_recipeName, recipe.getName());
 
+//            // Adding ingredients to listView
+            Intent widgetServiceIntent = new Intent(context, RecipeWidgetIngredientService.class);
+            widgetServiceIntent.putExtra(RecipeWidgetIngredientService.RECIPE, jsonRecipe);
+            widgetServiceIntent.setData(Uri.parse(
+                    widgetServiceIntent.toUri(Intent.URI_INTENT_SCHEME)));
+            views.setRemoteAdapter(R.id.lv_ingredients, widgetServiceIntent);
+
+            // Pending intent that opens activity with the proper recipe
             Intent recipeDetailsIntent = new Intent(context, RecipeDetailsActivity.class);
             recipeDetailsIntent.putExtra(RecipeDetailsActivity.RECIPE_EXTRA, recipe);
-
             PendingIntent recipeDetailsPendingIntent =
                     PendingIntent.getActivity(context, appWidgetId, recipeDetailsIntent, 0);
-
-            views.setOnClickPendingIntent(R.id.rl_widget_root, recipeDetailsPendingIntent);
+            views.setOnClickPendingIntent(R.id.ll_widget_root, recipeDetailsPendingIntent);
         }
 
         // Instruct the widget manager to update the widget

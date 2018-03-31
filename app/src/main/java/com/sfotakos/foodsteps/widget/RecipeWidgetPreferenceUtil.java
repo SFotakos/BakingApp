@@ -4,22 +4,22 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Created by spyridion on 31/03/18.
+ * Adds simple recipe persistence to work with widgets.
  */
 
-public class RecipeWidgetPreferenceUtil {
+class RecipeWidgetPreferenceUtil {
 
     static String widgetPrefs = "WIDGET_PREFERENCES";
     static String widgetRecipe = "WIDGET_SAVED_RECIPE";
 
-    public static void persistRecipe(Context context, String recipeJson, int widgetId) {
+    static void persistRecipe(Context context, String recipeJson, int widgetId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(widgetPrefs, 0);
         SharedPreferences.Editor sharedPrefEditor = sharedPreferences.edit();
         sharedPrefEditor.putString(widgetRecipe + widgetId, recipeJson);
         sharedPrefEditor.apply();
     }
 
-    public static String getPersistedRecipe(Context context, int widgetId) {
+    static String getPersistedRecipe(Context context, int widgetId) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(widgetPrefs, 0);
         return sharedPreferences.getString(widgetRecipe + widgetId, null);
     }

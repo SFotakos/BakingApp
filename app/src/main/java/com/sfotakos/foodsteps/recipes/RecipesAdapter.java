@@ -2,6 +2,7 @@ package com.sfotakos.foodsteps.recipes;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -58,12 +59,15 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         holder.tvRecipeName.setText(recipe.getName());
 
-        if (recipe.getImage() != null && !recipe.getImage().isEmpty()){
+        if (recipe.getImage() != null && !recipe.getImage().isEmpty()) {
             Picasso.with(context)
                     .load(recipe.getImage())
                     .placeholder(R.drawable.ic_food)
                     .error(R.drawable.ic_food)
                     .into(holder.ivRecipeImage);
+        } else {
+            holder.ivRecipeImage.setImageDrawable(ResourcesCompat.getDrawable(
+                    context.getResources(), R.drawable.ic_food, null));
         }
 
         String inStepsAmount = String.format(
@@ -104,7 +108,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
         }
     }
 
-    public interface IRecipesAdapter{
+    public interface IRecipesAdapter {
         void onClick(Recipe recipe);
     }
 
