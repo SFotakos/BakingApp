@@ -24,20 +24,26 @@ public class JsonUtil {
         return gson.fromJson(recipeJson, listType);
     }
 
-    public static List<Recipe> getRecipes(AssetManager assetManager) {
+    public static Recipe parseRecipeFromJson(String json) {
+        Gson gson = new Gson();
+        Type listType = new TypeToken<Recipe>(){}.getType();
+        Recipe recipe = gson.fromJson(json, listType);
+        return recipe;
+    }
+
+    /* Get File in Assets Folder */
+    public static String generateJson(Object pojo) {
+        Gson gson = new Gson();
+        return gson.toJson(pojo);
+    }
+
+    public static List<Recipe> getRecipesFromAsset(AssetManager assetManager) {
         String jsonString = getRecipeFromAssetsJSON(assetManager);
         Log.d(TAG, "Json: " + jsonString);
         Gson gson = new Gson();
         Type listType = new TypeToken<List<Recipe>>(){}.getType();
         List<Recipe> recipes = gson.fromJson(jsonString, listType);
         return recipes;
-    }
-
-    public static Recipe parseRecipeFromJson(String json) {
-        Gson gson = new Gson();
-        Type listType = new TypeToken<Recipe>(){}.getType();
-        Recipe recipe = gson.fromJson(json, listType);
-        return recipe;
     }
 
     /* Get File in Assets Folder */
@@ -56,11 +62,5 @@ public class JsonUtil {
         }
 
         return json;
-    }
-
-    /* Get File in Assets Folder */
-    public static String generateJson(Object pojo) {
-        Gson gson = new Gson();
-        return gson.toJson(pojo);
     }
 }
