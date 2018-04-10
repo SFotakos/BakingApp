@@ -10,4 +10,8 @@
     <string name="previous">Previous</string>
     <string name="add_widget">Add widget</string>
     <string name="widget_configuration_title">Select recipe</string>
+
+    <string name="error_default">Something went wrong</string>
+    <string name="error_no_connectivity">You\'re offline data might not load correctly.</string>
+
 </resources>

@@ -1,7 +1,10 @@
 package com.sfotakos.foodsteps.recipes;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -21,11 +24,14 @@ import java.util.ArrayList;
 
 public class RecipesActivity extends AppCompatActivity {
 
+    private ActivityRecipesBinding mBinding;
+    private ConnectivityReceiver connectivityReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityRecipesBinding mBinding = DataBindingUtil.setContentView(this, R.layout.activity_recipes);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_recipes);
 
         Toolbar toolbar = mBinding.toolbar;
         setSupportActionBar(toolbar);
@@ -33,11 +39,34 @@ public class RecipesActivity extends AppCompatActivity {
         ActivityUtils.applyFontForToolbarTitle(toolbar,
                 ResourcesCompat.getFont(this, R.font.comic_black_rabbit));
 
-        new FetchRecipes().execute();
-
+        if (ActivityUtils.hasConnection(this)) {
+            new FetchRecipes().execute();
+        } else {
+            showErrorMessage(getResources().getString(R.string.error_no_connectivity));
+        }
     }
 
-    private void setupFragment(ArrayList<Recipe> recipes){
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (connectivityReceiver != null) {
+            unregisterReceiver(connectivityReceiver);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        connectivityReceiver = new ConnectivityReceiver();
+        registerReceiver(connectivityReceiver, filter);
+    }
+
+    private void setupFragment(ArrayList<Recipe> recipes) {
+        showRecipes();
         RecipesFragment recipesFragment =
                 (RecipesFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
         if (recipesFragment == null) {
@@ -49,16 +78,26 @@ public class RecipesActivity extends AppCompatActivity {
         }
     }
 
+    private void showRecipes() {
+        mBinding.tvErrorMessage.setVisibility(View.GONE);
+        mBinding.contentFrame.setVisibility(View.VISIBLE);
+    }
+
+    public void showErrorMessage(String errorMessage) {
+        mBinding.tvErrorMessage.setText(errorMessage);
+        mBinding.tvErrorMessage.setVisibility(View.VISIBLE);
+    }
+
     private class FetchRecipes extends AsyncTask<Void, Void, ArrayList<Recipe>> {
 
         @Override
         protected void onPreExecute() {
-//            mBinding.tvErrorMessage.setVisibility(View.GONE);
+            mBinding.tvErrorMessage.setVisibility(View.GONE);
             super.onPreExecute();
         }
 
         @Override
-        protected ArrayList<Recipe> doInBackground(Void ... params) {
+        protected ArrayList<Recipe> doInBackground(Void... params) {
 
             try {
                 String jsonResponse = NetworkUtils.getResponseFromHttpUrl(NetworkUtils.buildRecipesUrl());
@@ -74,7 +113,19 @@ public class RecipesActivity extends AppCompatActivity {
             if (recipes != null) {
                 setupFragment(recipes);
             } else {
-//                showErrorMessage(getResources().getString(R.string.error_default));
+                showErrorMessage(getResources().getString(R.string.error_default));
+            }
+        }
+    }
+
+    private class ConnectivityReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (ActivityUtils.hasConnection(context)) {
+                new FetchRecipes().execute();
+            } else {
+                showErrorMessage(getResources().getString(R.string.error_no_connectivity));
             }
         }
     }

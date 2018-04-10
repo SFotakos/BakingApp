@@ -23,6 +23,19 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
     </android.support.design.widget.AppBarLayout>
 
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/material_color_red_400"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="@string/error_default"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <FrameLayout
             android:id="@+id/contentFrame"
             android:layout_width="match_parent"
