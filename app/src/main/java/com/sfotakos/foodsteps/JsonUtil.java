@@ -37,12 +37,12 @@ public class JsonUtil {
         return gson.toJson(pojo);
     }
 
-    public static List<Recipe> getRecipesFromAsset(AssetManager assetManager) {
+    public static ArrayList<Recipe> getRecipesFromAsset(AssetManager assetManager) {
         String jsonString = getRecipeFromAssetsJSON(assetManager);
         Log.d(TAG, "Json: " + jsonString);
         Gson gson = new Gson();
-        Type listType = new TypeToken<List<Recipe>>(){}.getType();
-        List<Recipe> recipes = gson.fromJson(jsonString, listType);
+        Type listType = new TypeToken<ArrayList<Recipe>>(){}.getType();
+        ArrayList<Recipe> recipes = gson.fromJson(jsonString, listType);
         return recipes;
     }
 

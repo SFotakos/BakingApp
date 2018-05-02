@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,7 +54,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipeVi
 
         holder.tvRecipeName.setText(recipe.getName());
 
-        if (recipe.getImage() != null && !recipe.getImage().isEmpty()) {
+        if (!TextUtils.isEmpty(recipe.getImage())) {
             Picasso.with(context)
                     .load(recipe.getImage())
                     .placeholder(R.drawable.ic_food)

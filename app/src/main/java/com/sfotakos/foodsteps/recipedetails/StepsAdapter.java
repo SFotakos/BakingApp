@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import android.widget.TextView;
 
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.general.Step;
+import com.squareup.picasso.Picasso;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -58,7 +62,14 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
 
         holder.tvStepDescription.setText(step.getShortDescription());
 
-        if (step.getVideoURL() != null && !step.getVideoURL().isEmpty()) {
+        // Should only show the thumbnail if a video URL exists
+        if (!TextUtils.isEmpty(step.getVideoURL())) {
+            if (!TextUtils.isEmpty(step.getThumbnailURL())) {
+                Picasso.with(holder.ivVideo.getContext())
+                        .load(step.getThumbnailURL())
+                        .placeholder(android.R.drawable.ic_media_play)
+                        .into(holder.ivVideo);
+            }
             holder.ivVideo.setImageResource(android.R.drawable.ic_media_play);
             holder.ivVideo.setVisibility(View.VISIBLE);
         } else {
@@ -88,7 +99,7 @@ public class StepsAdapter extends RecyclerView.Adapter<StepsAdapter.StepViewHold
         }
     }
 
-    public interface IStepsAdapter{
+    public interface IStepsAdapter {
         void onClick(ArrayList<Step> steps, int currentStep);
     }
 

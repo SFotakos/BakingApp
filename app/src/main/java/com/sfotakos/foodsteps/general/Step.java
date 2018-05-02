@@ -76,4 +76,7 @@ public class Step implements Parcelable {
         return videoURL;
     }
 
+    public String getThumbnailURL() {
+        return thumbnailURL;
+    }
 }
