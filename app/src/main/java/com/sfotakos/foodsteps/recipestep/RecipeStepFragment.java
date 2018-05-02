@@ -5,24 +5,34 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.google.android.exoplayer2.video.VideoListener;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.general.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeStepBinding;
@@ -32,6 +42,8 @@ import java.util.ArrayList;
 public class RecipeStepFragment extends Fragment {
     private static final String STEP_PARAM = "STEP_PARAM";
     private static final String STEP_CURRENT_PARAM = "STEP_CURRENT_PARAM";
+
+    private static final String PLAYER_CURRENT_POSITION = "EXOPLAYER_POSITION";
 
     private FragmentRecipeStepBinding mBinding;
 
@@ -94,41 +106,63 @@ public class RecipeStepFragment extends Fragment {
         return fragmentView;
     }
 
-    private void loadStep(Step step){
-        String videoURL = step.getVideoURL();
-        if (videoURL == null || videoURL.isEmpty()) {
-            mBinding.exoPlayerViewStepVideo.setVisibility(View.GONE);
-        } else {
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            Long playerPosition = savedInstanceState.getLong(PLAYER_CURRENT_POSITION);
+            if (playerPosition != C.TIME_UNSET) exoPlayer.seekTo(playerPosition);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (exoPlayer != null) {
+            outState.putLong(PLAYER_CURRENT_POSITION, exoPlayer.getCurrentPosition());
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        stopReleaseExoPlayer();
+    }
+
+    private void loadStep(Step step) {
+        if (!TextUtils.isEmpty(step.getVideoURL())) {
             mBinding.exoPlayerViewStepVideo.setVisibility(View.VISIBLE);
+            setupExoPlayer(Uri.parse(step.getVideoURL()));
+        } else {
+            mBinding.exoPlayerViewStepVideo.setVisibility(View.GONE);
         }
 
         mBinding.tvStepFullDescription.setText(step.getDescription());
 
         String stepCountString = Integer.toString(currentStep) + "/" +
-                Integer.toString(stepsExtra.size()-1);
+                Integer.toString(stepsExtra.size() - 1);
         mBinding.tvCurrentStep.setText(stepCountString);
-
-        setupExoPlayer(Uri.parse(step.getVideoURL()));
     }
 
-    private void nextStep(){
+    private void nextStep() {
         currentStep++;
         stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
         prevNextEnable();
     }
 
-    private void previousStep(){
+    private void previousStep() {
         currentStep--;
         stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
         prevNextEnable();
     }
 
-    private void prevNextEnable(){
-        if (currentStep == 0){
+    private void prevNextEnable() {
+        if (currentStep == 0) {
             mBinding.linearPrevStep.setVisibility(View.INVISIBLE);
-        } else if (currentStep == stepsExtra.size()-1){
+        } else if (currentStep == stepsExtra.size() - 1) {
             mBinding.linearNextStep.setVisibility(View.INVISIBLE);
         } else {
             mBinding.linearPrevStep.setVisibility(View.VISIBLE);
@@ -136,7 +170,7 @@ public class RecipeStepFragment extends Fragment {
         }
     }
 
-    private void setupExoPlayer(Uri videoUri){
+    private void setupExoPlayer(Uri videoUri) {
         Context context = getContext();
         if (context == null) return;
 
@@ -160,8 +194,8 @@ public class RecipeStepFragment extends Fragment {
         exoPlayer.prepare(videoSource);
     }
 
-    private void stopReleaseExoPlayer(){
-        if (exoPlayer != null){
+    private void stopReleaseExoPlayer() {
+        if (exoPlayer != null) {
             exoPlayer.stop();
             exoPlayer.release();
         }
