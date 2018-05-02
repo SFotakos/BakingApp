@@ -130,6 +130,12 @@ public class RecipeStepFragment extends Fragment {
         stopReleaseExoPlayer();
     }
 
+    public void loadStep (Step step, int stepNumber){
+        currentStep = stepNumber;
+        prevNextEnable();
+        loadStep(step);
+    }
+
     private void loadStep(Step step) {
         if (!TextUtils.isEmpty(step.getVideoURL())) {
             mBinding.exoPlayerViewStepVideo.setVisibility(View.VISIBLE);
