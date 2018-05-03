@@ -13,26 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.exoplayer2.C;
-import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoListener;
 import com.sfotakos.foodsteps.R;
 import com.sfotakos.foodsteps.general.Step;
 import com.sfotakos.foodsteps.databinding.FragmentRecipeStepBinding;
@@ -44,11 +37,16 @@ public class RecipeStepFragment extends Fragment {
     private static final String STEP_CURRENT_PARAM = "STEP_CURRENT_PARAM";
 
     private static final String PLAYER_CURRENT_POSITION = "EXOPLAYER_POSITION";
+    private static final String PLAYER_PLAY_WHEN_READY = "EXOPLAYER_PLAY_WHEN_READY";
+
+    private static final String CURRENT_STEP = "CURRENT_STEP";
 
     private FragmentRecipeStepBinding mBinding;
 
     private ArrayList<Step> stepsExtra;
     private int currentStep;
+    private long playerCurrentPosition;
+    private boolean playWhenReady;
 
     private SimpleExoPlayer exoPlayer;
 
@@ -81,7 +79,36 @@ public class RecipeStepFragment extends Fragment {
                 inflater.inflate(R.layout.fragment_recipe_step, container, false);
 
         mBinding = DataBindingUtil.bind(fragmentView);
+        if (savedInstanceState != null) {
+            currentStep = savedInstanceState.getInt(CURRENT_STEP);
+        }
 
+        return fragmentView;
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            playerCurrentPosition = savedInstanceState.getLong(PLAYER_CURRENT_POSITION);
+            playWhenReady = savedInstanceState.getBoolean(PLAYER_PLAY_WHEN_READY);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (exoPlayer != null) {
+            outState.putLong(PLAYER_CURRENT_POSITION, playerCurrentPosition);
+            outState.putBoolean(PLAYER_PLAY_WHEN_READY, playWhenReady);
+            outState.putInt(CURRENT_STEP, currentStep);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         if (stepsExtra != null) {
             Step step = stepsExtra.get(currentStep);
 
@@ -102,47 +129,31 @@ public class RecipeStepFragment extends Fragment {
 
             loadStep(step);
         }
-
-        return fragmentView;
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            Long playerPosition = savedInstanceState.getLong(PLAYER_CURRENT_POSITION);
-            if (playerPosition != C.TIME_UNSET) exoPlayer.seekTo(playerPosition);
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+    public void onPause() {
+        super.onPause();
         if (exoPlayer != null) {
-            outState.putLong(PLAYER_CURRENT_POSITION, exoPlayer.getCurrentPosition());
+            playerCurrentPosition = exoPlayer.getCurrentPosition();
+            playWhenReady = exoPlayer.getPlayWhenReady();
+            stopReleaseExoPlayer();
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        stopReleaseExoPlayer();
-    }
-
-    public void loadStep (Step step, int stepNumber){
+    public void loadStep(Step step, int stepNumber) {
         currentStep = stepNumber;
+
+        stopReleaseExoPlayer();
+        playerCurrentPosition = 0;
+        playWhenReady = false;
+
         prevNextEnable();
         loadStep(step);
     }
 
     private void loadStep(Step step) {
-        if (!TextUtils.isEmpty(step.getVideoURL())) {
-            mBinding.exoPlayerViewStepVideo.setVisibility(View.VISIBLE);
-            setupExoPlayer(Uri.parse(step.getVideoURL()));
-        } else {
-            mBinding.exoPlayerViewStepVideo.setVisibility(View.GONE);
-        }
+        showAndSetupExoPlayer(step);
 
         mBinding.tvStepFullDescription.setText(step.getDescription());
 
@@ -152,6 +163,9 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void nextStep() {
+        playerCurrentPosition = 0;
+        playWhenReady = false;
+
         currentStep++;
         stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
@@ -159,6 +173,9 @@ public class RecipeStepFragment extends Fragment {
     }
 
     private void previousStep() {
+        playerCurrentPosition = 0;
+        playWhenReady = false;
+
         currentStep--;
         stopReleaseExoPlayer();
         loadStep(stepsExtra.get(currentStep));
@@ -173,6 +190,19 @@ public class RecipeStepFragment extends Fragment {
         } else {
             mBinding.linearPrevStep.setVisibility(View.VISIBLE);
             mBinding.linearNextStep.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void showAndSetupExoPlayer(Step step) {
+        if (!TextUtils.isEmpty(step.getVideoURL())) {
+            setupExoPlayer(Uri.parse(step.getVideoURL()));
+
+            if (playerCurrentPosition != C.TIME_UNSET) exoPlayer.seekTo(playerCurrentPosition);
+            exoPlayer.setPlayWhenReady(playWhenReady);
+
+            mBinding.exoPlayerViewStepVideo.setVisibility(View.VISIBLE);
+        } else {
+            mBinding.exoPlayerViewStepVideo.setVisibility(View.GONE);
         }
     }
 
